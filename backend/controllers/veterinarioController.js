@@ -2,9 +2,11 @@ import Veterinario from '../models/Veterinario.js';
 import generarId from '../helpers/generarId.js';
 import generarJWT from '../helpers/generarJWT.js';
 
+import { emailRegistro } from '../helpers/emailRegistro.js';
+
 /**La request siempre se define primero que la response */
 const registrar = async (req, res) => {
-  const { email } = req.body;
+  const { email, name } = req.body;
 
   //Revisar usuarios registrados
   const veterinarioExiste = await Veterinario.findOne({
@@ -12,7 +14,7 @@ const registrar = async (req, res) => {
   });
 
   if (veterinarioExiste) {
-    const error = new Error('Veterinario ya registrado');
+    const error = new Error('Usuario ya registrado');
     return res.status(400).json({ msg: error.message });
   }
 
@@ -23,10 +25,18 @@ const registrar = async (req, res) => {
     //Guardar un nuevo veterinario en la base de datos
     const veterinarioGuardado = await veterinario.save();
 
+    //Enviar el email
+
+    emailRegistro({
+      email,
+      name,
+      token: veterinarioGuardado.token,
+    });
+
     //retornamos un json con los datos guardados en la base de datos
     res.json(veterinarioGuardado);
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
 };
 
@@ -52,7 +62,7 @@ const confirmar = async (req, res) => {
     usuarioConfirmar.verified = true;
     await usuarioConfirmar.save();
 
-    res.json({ msg: 'usuario confirmado exitosamente' });
+    res.json({ msg: 'Usuario confirmado exitosamente' });
   } catch (error) {
     console.log(error);
   }

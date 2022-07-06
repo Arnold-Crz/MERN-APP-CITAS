@@ -1,15 +1,20 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { Alerta } from '../components/ui';
+import clienteAxios from '../config/axios';
+
 export function Register() {
   const INITIAL_FORM = {
-    nombre: '',
+    name: '',
     email: '',
     password: '',
     repitePassword: '',
   };
 
   const [form, setForm] = useState(INITIAL_FORM);
-  const { nombre, email, password, repitePassword } = form;
+  const [alerta, setAlerta] = useState({});
+
+  const { name, email, password, repitePassword } = form;
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -17,6 +22,49 @@ export function Register() {
       ...form,
       [name]: value,
     });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if ([name, email, password, repitePassword].includes('')) {
+      setAlerta({
+        msg: 'Hay campos vacios',
+        error: true,
+      });
+      return;
+    }
+
+    if (password !== repitePassword) {
+      setAlerta({
+        msg: 'Los password no son iguales',
+        error: true,
+      });
+      return;
+    }
+
+    if (password < 6) {
+      setAlerta({
+        msg: 'El password es muy corto, minimo debe de tener 6 caracteres',
+        error: true,
+      });
+      return;
+    }
+
+    setAlerta('');
+
+    try {
+      const url = `/veterinarios`;
+      await clienteAxios.post(url, { name, email, password });
+      setAlerta({
+        msg: 'Creado exitosamente, verifica tu correo para confirmar',
+        error: false,
+      });
+    } catch (error) {
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    }
   };
 
   return (
@@ -28,21 +76,23 @@ export function Register() {
         </h1>
       </div>
       <div className="mt-20 md:mt-5 shadow-lg px-5 py-10 rounded-xl">
-        <form>
+        {alerta.msg && <Alerta alerta={alerta} />}
+
+        <form onSubmit={handleSubmit}>
           <div className="my-5">
             <label
               className="uppercase text-gray-600 text-xl font-bold"
-              htmlFor="nombre"
+              htmlFor="name"
             >
               Nombre
             </label>
             <input
-              name="nombre"
+              name="name"
               type="text"
-              id="nombre"
-              placeholder="Escribe tu Nombre"
+              id="name"
+              placeholder="Escribe tu name"
               className="border w-full p-2 mt-2 bg-gray-50 rounded-xl"
-              value={nombre}
+              value={name}
               onChange={handleChange}
             />
           </div>
@@ -109,7 +159,7 @@ export function Register() {
         "
         >
           <Link className="block text-center my-3 text-gray-500" to="/">
-            ¿Ya tienes una cuenta inicia sesion?
+            ¿Ya tienes una cuenta? inicia Sesion
           </Link>
           <Link
             className="block text-center my-3 text-gray-500"
