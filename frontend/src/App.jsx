@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
-import { AuthLayout } from './layout';
+import { AdminLayout, AuthLayout } from './layout';
 import { Login, Register, Confirm, ForgetPassword, NewPassword } from './pages';
+import { AdminPatients } from './pages/admin-pages';
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
             <Route path="olvide-password" element={<ForgetPassword />} />
             <Route path="olvide-password/:token" element={<NewPassword />} />
             <Route path="confirmar/:id" element={<Confirm />} />
+          </Route>
+
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminPatients />} />
           </Route>
         </Routes>
       </AuthProvider>

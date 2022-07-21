@@ -41,11 +41,13 @@ const registrar = async (req, res) => {
   }
 };
 
+// Obtener el perfil de ese veterinario logueado con su token
 const perfil = (req, res) => {
-  const { veterianrio } = req;
-  res.json({ veterianrio: veterianrio });
+  const { veterinario } = req;
+  res.json({ veterinario });
 };
 
+//Confirmar el token del usuario para darale si o no los permisos a la app
 const confirmar = async (req, res) => {
   const { token } = req.params;
 
