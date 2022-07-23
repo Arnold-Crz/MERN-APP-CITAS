@@ -44,7 +44,9 @@ const registrar = async (req, res) => {
 // Obtener el perfil de ese veterinario logueado con su token
 const perfil = (req, res) => {
   const { veterinario } = req;
-  res.json({ veterinario });
+  const { _id, name, email, phone, web, token } = veterinario;
+
+  res.json({ _id, name, email, phone, web, token });
 };
 
 //Confirmar el token del usuario para darale si o no los permisos a la app
@@ -92,7 +94,12 @@ const autenticar = async (req, res) => {
 
   if (await usuario.comprobarPassword(password)) {
     //generar JWT para el usuario autenticado
-    res.json({ token: generarJWT(usuario.id) });
+    res.json({
+      _id: usuario._id,
+      name: usuario.name,
+      email: usuario.email,
+      token: generarJWT(usuario.id),
+    });
   } else {
     const error = new Error('Tu password es incorrecto');
     return res.status(403).json({ msg: error.message });

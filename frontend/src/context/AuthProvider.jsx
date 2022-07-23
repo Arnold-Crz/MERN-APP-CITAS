@@ -1,12 +1,11 @@
 import { useState, useEffect, createContext } from 'react';
 import clienteAxios from '../config/axios';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [login, setLogin] = useState(true);
-  console.log(auth);
 
   useEffect(() => {
     const authUser = async () => {
@@ -37,12 +36,18 @@ export const AuthProvider = ({ children }) => {
     authUser();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    setAuth({});
+  };
+
   const value = {
     auth,
     setAuth,
     login,
+    logout,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default AuthContext;
+export default AuthProvider;

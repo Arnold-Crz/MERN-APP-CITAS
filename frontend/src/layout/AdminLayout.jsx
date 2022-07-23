@@ -10,7 +10,13 @@ export const AdminLayout = () => {
     <>
       <Header />
 
-      {auth?.veterinario?._id ? <Outlet /> : <Navigate to="/" />}
+      {auth?._id ? (
+        <main className="container mx-auto mt-10">
+          <Outlet />{' '}
+        </main>
+      ) : (
+        <Navigate to="/" />
+      )}
 
       <Footer />
     </>
