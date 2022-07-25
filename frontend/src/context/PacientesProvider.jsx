@@ -80,11 +80,36 @@ const PacientesProvider = ({ children }) => {
     setPaciente(paciente);
   };
 
+  const deletePaciente = async (id) => {
+    const confirmar = confirm('Desea eleminar el Paciente?');
+    if (confirmar) {
+      try {
+        const token = localStorage.getItem('token');
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        await clienteAxios.delete(`/pacientes/${id}`, config);
+
+        const updatePacientes = pacientes.filter(
+          (pacienteSate) => pacienteSate._id !== id
+        );
+        setPacientes(updatePacientes);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const DATA = {
     pacientes,
     savePaciente,
     editPaciente,
     paciente,
+    deletePaciente,
   };
 
   return (

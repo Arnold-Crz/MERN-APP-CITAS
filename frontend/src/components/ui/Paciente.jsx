@@ -2,7 +2,7 @@ import usePacientes from '../../hooks/usePacientes';
 import { formatDate } from '../../helpers';
 
 export const Paciente = ({ paciente }) => {
-  const { editPaciente } = usePacientes();
+  const { editPaciente, deletePaciente } = usePacientes();
   const { email, fecha, nombre, propietario, sintomas, _id } = paciente;
 
   return (
@@ -39,7 +39,10 @@ export const Paciente = ({ paciente }) => {
         >
           Editar
         </button>
-        <button className="py-2 px-10 bg-red-600 hover:bg-red-800 text-white uppercase rounded-md">
+        <button
+          className="py-2 px-10 bg-red-600 hover:bg-red-800 text-white uppercase rounded-md"
+          onClick={() => deletePaciente(_id)}
+        >
           Eliminar
         </button>
       </div>

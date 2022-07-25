@@ -1,7 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AdminLayout, AuthLayout } from './layout';
 import { Login, Register, Confirm, ForgetPassword, NewPassword } from './pages';
-import { AdminPatients } from './pages/admin-pages';
+import {
+  AdminPatients,
+  UpdatePassword,
+  UpdatePerfil,
+} from './pages/admin-pages';
 
 import { AuthProvider, PacientesProvider } from './context';
 
@@ -21,6 +25,8 @@ function App() {
 
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminPatients />} />
+              <Route path="perfil" element={<UpdatePerfil />} />
+              <Route path="cambiar-password" element={<UpdatePassword />} />
             </Route>
           </Routes>
         </PacientesProvider>

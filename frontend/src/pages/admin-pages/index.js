@@ -1,1 +1,3 @@
-export * from './AdminPatients.jsx';
+export * from './AdminPatients';
+export * from './UpdatePassword';
+export * from './UpdatePerfil';

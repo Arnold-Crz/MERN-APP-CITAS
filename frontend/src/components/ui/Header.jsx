@@ -12,13 +12,13 @@ export const Header = () => {
 
         <nav className="flex gap-4 items-center flex-col md:flex-row mt-5 md:mt-0">
           <Link
-            to="/pacientes"
+            to="/admin"
             className="text-white text-sm font-bold uppercase  "
           >
             Pacientes
           </Link>
           <Link
-            to="/perfil"
+            to="/admin/perfil"
             className="text-white text-sm font-bold uppercase "
           >
             Perfil

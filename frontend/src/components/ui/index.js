@@ -4,3 +4,4 @@ export * from './Header';
 export * from './Footer';
 export * from './ListPacientes';
 export * from './Form';
+export * from './NavAdminPerfil';

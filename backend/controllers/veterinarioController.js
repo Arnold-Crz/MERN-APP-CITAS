@@ -170,6 +170,11 @@ const newPassword = async (req, res) => {
   }
 };
 
+const updatePerfil = (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body);
+};
+
 export {
   registrar,
   perfil,
@@ -178,4 +183,5 @@ export {
   forgetPassword,
   checkToken,
   newPassword,
+  updatePerfil,
 };
