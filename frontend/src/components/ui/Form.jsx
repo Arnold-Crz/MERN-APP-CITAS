@@ -1,32 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import usePacientes from '../../hooks/usePacientes';
 import { Alerta } from './Alerta';
 
 export const Form = () => {
-  const [name, setName] = useState('');
+  const [nombre, setNombre] = useState('');
   const [propietario, setPropietario] = useState('');
   const [email, setEmail] = useState('');
-  const [fecha, setFecha] = useState(Date.now());
+  const [fecha, setFecha] = useState('');
   const [sintomas, setSintomas] = useState('');
+  //para saber si estamos editando
+  const [_id, setId] = useState(null);
 
+  //hooks
   const [alerta, setAlerta] = useState({});
+  const { savePaciente, paciente } = usePacientes();
+
+  useEffect(() => {
+    //verificamos que los campos esten vacios para editarlos con el nuecvo state
+    if (paciente?.nombre) {
+      setNombre(paciente.nombre);
+      setPropietario(paciente.propietario);
+      setEmail(paciente.email);
+      setFecha(new Date(paciente.fecha).toISOString());
+      setSintomas(paciente.sintomas);
+      setId(paciente._id);
+    }
+  }, [paciente]);
 
   const { msg } = alerta;
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if ([name, propietario, email, fecha, sintomas].includes('')) {
+    if ([nombre, propietario, email, fecha, sintomas].includes('')) {
       setAlerta({
         msg: 'Todos los campos son Obligatorios',
         error: true,
       });
       return;
     }
+
+    //pasamos el id al provider para saber si estamos iditando o agregando uno nuevo
+    savePaciente({ nombre, propietario, email, fecha, sintomas, _id });
+    setAlerta({ msg: 'Guardado Exitosamante' });
+    setNombre('');
+    setPropietario('');
+    setFecha('');
+    setEmail('');
+    setSintomas('');
+    setId('');
   };
 
   return (
     <>
-      <h3 className="text-center mb-10">
+      <h2 className="font-bold text-3xl text-center">Añade tus pacientes</h2>
+      <h3 className="text-center mt-5 mb-10">
         Admisnitra tus{' '}
         <span className="text-indigo-600 font-bold">Pacientes</span>{' '}
       </h3>
@@ -50,8 +78,8 @@ export const Form = () => {
             placeholder="Nombre del Paciente"
             name="paciente"
             id="paciente"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
           />
         </div>
         <div className="mt-5">
@@ -117,7 +145,7 @@ export const Form = () => {
 
         <input
           type="submit"
-          value="Agregar Paciente"
+          value={_id ? 'Editar Paciente' : 'Agregar Paciente'}
           className="bg-indigo-600 w-full p-3 uppercase font-bold text-white rounded-md hover:bg-indigo-800 cursor-pointer transition-colors "
         />
       </form>
