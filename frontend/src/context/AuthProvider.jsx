@@ -57,10 +57,47 @@ const AuthProvider = ({ children }) => {
 
     try {
       const url = `/veterinarios/perfil/${datos._id}`;
-      const { data } = await clienteAxios.put(url, datos, config);
-      console.log(data);
+      await clienteAxios.put(url, datos, config);
+      return {
+        msg: 'Almacenado Correctamente',
+      };
     } catch (error) {
-      console.log(error.response.data.msg);
+      return {
+        msg: error.response.data.msg,
+        error: true,
+      };
+    }
+  };
+
+  const saveNewPassword = async (datos) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLogin(false);
+      return;
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.put(
+        `/veterinarios/cambiar-password`,
+        datos,
+        config
+      );
+
+      return {
+        msg: data.msg,
+      };
+    } catch (error) {
+      return {
+        msg: error.response.data.msg,
+        error: true,
+      };
     }
   };
 
@@ -70,6 +107,7 @@ const AuthProvider = ({ children }) => {
     login,
     logout,
     updatePerfil,
+    saveNewPassword,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

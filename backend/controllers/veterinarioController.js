@@ -170,9 +170,55 @@ const newPassword = async (req, res) => {
   }
 };
 
-const updatePerfil = (req, res) => {
-  console.log(req.params.id);
-  console.log(req.body);
+const updatePerfil = async (req, res) => {
+  const veterinario = await Veterinario.findById(req.params.id);
+  if (!veterinario) {
+    const error = new Error('El Usuario no existe');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  const { email } = req.body;
+  if (veterinario.email !== email) {
+    const existeEmail = await Veterinario.findOne({ email });
+    if (existeEmail) {
+      const error = new Error('El email no es valido o pertece a otro usuario');
+      return res.status(400).json({ msg: error.message });
+    }
+  }
+
+  try {
+    const { name, web, email, phone } = req.body;
+
+    veterinario.name = name || veterinario.name;
+    veterinario.web = web || veterinario.web;
+    veterinario.email = email || veterinario.email;
+    veterinario.phone = phone || veterinario.phone;
+
+    const veterinarioUpdate = await veterinario.save();
+    res.json({ veterinarioUpdate });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const changePassword = async (req, res) => {
+  const { id } = req.veterinario;
+  const { password_actual, password_nuevo } = req.body;
+
+  const veterinario = await Veterinario.findById(id);
+  if (!veterinario) {
+    const error = new Error('No tienes permisos para este usuario');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  if (await veterinario.comprobarPassword(password_actual)) {
+    veterinario.password = password_nuevo;
+    await veterinario.save();
+    res.status(200).json({ msg: 'Su Password ha sido actualizado.' });
+  } else {
+    const error = new Error('El password actual es incorrecto');
+    return res.status(400).json({ msg: error.message });
+  }
 };
 
 export {
@@ -184,4 +230,5 @@ export {
   checkToken,
   newPassword,
   updatePerfil,
+  changePassword,
 };

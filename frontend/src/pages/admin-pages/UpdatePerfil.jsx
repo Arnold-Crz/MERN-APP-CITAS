@@ -20,7 +20,7 @@ export function UpdatePerfil() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const { name, email } = perfil;
@@ -34,7 +34,8 @@ export function UpdatePerfil() {
       setAlerta({});
     }
 
-    updatePerfil(perfil);
+    const pefilEdit = await updatePerfil(perfil);
+    setAlerta(pefilEdit);
   };
 
   const { msg } = alerta;

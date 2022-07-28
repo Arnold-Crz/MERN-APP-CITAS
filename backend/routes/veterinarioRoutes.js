@@ -8,6 +8,7 @@ import {
   checkToken,
   newPassword,
   updatePerfil,
+  changePassword,
 } from '../controllers/veterinarioController.js';
 import checkAuth from '../middleware/authMiddleware.js';
 
@@ -29,4 +30,5 @@ router.route('/forget-password/:token').get(checkToken).post(newPassword);
 // La funcion checkAuth es un middelware que nos ayuda a saber si un usuario esta auntenticado.
 router.get('/perfil', checkAuth, perfil);
 router.put('/perfil/:id', checkAuth, updatePerfil);
+router.put('/cambiar-password', checkAuth, changePassword);
 export default router;
